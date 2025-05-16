@@ -14,7 +14,6 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         model = CustomUser
         fields = ['username','email','password','password2']
         
-        
     def validate(self,data):
         if data['password'] != data['password2']:
             raise serializers.ValidationError('passwords do not match...')
@@ -24,37 +23,31 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         validated_data.pop('password2')
         validated_data['password']=make_password(validated_data['password'])
         return CustomUser.objects.create(**validated_data)
-            
 
 
 
-class UserLoginSerializer(serializers.ModelSerializer):
+
+class LoginSerializer(serializers.ModelSerializer):
     email = serializers.EmailField() 
     password = serializers.CharField(write_only = True)
     
+    class Meta:
+        model = CustomUser
+        fields = ['email','password']
+    
     def validate(self,data):
         email = data.get('email')
-        password=data.get('password')
+        password=data.get('password')       
         
         if email and password:
-            user =authenticate(email=email,password=password)
+            user =authenticate(username=email,password=password)
             if not user :
                 raise serializers.ValidationError('invalid email or password')
         else:
-            raise serializers.ValidationError('Both email and password are required')
-            
+            raise serializers.ValidationError('Both email and password are required')    
         data['user'] = user
         return data
         
     
     
-    
-    
-
-
-
-      
-# class AdminRegistrationSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = CustomUser
-#         fields =['email','first_name','last_name','username']
+   
