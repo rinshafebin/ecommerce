@@ -1,46 +1,45 @@
 from rest_framework import serializers
-from Admin.models import Category,Product
+from Admin.models import Product
+from Authentication.models import CustomUser
 
 
-class CategorySerializer(serializers.ModelSerializer):
+class ViewAllUsersSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Category
-        fields = ['id','name']
+        model = CustomUser
+        fields = ['id','username','email','is_active','date_joined']
 
 
-class ProductManagementSerializer(serializers.ModelSerializer):
-    category = CategorySerializer(read_only=True)
-    category_id = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all())   
+
+
+
+
+
+# -----------------------product serializer ----------------------------------------
+
+class ProductSerializer(serializers.ModelSerializer):
+    category = serializers.ChoiceField(choices=Product.CATEGORY_CHOICES)
     
     class Meta:       
         model = Product
         fields = '__all__'
-        read_only_fields = ['created_at','updated_at']
-        
-        
-    def validate_name(self,value):
+        read_only_fields = ['created_at', 'updated_at']
+           
+    def validate_name(self, value):
         if not value:
-           raise serializers.ValidationError('Product name is required')
-        if len(value)>3:
-            raise serializers.ValidationError('Product must have atleast 3 characters')
+            raise serializers.ValidationError('Product name is required')
+        if len(value) < 3:
+            raise serializers.ValidationError('Product must have at least 3 characters')
         return value
     
-    def validate_price(self,value):
-        if value<=0:
-            raise serializers.ValidationError('Price must be positive integer')
+    def validate_price(self, value):
+        if value <= 0:
+            raise serializers.ValidationError('Price must be positive')
         return value
     
-    def validate_stock(self,value):
-        if value<=0:
+    def validate_stock(self, value):
+        if value < 0:
             raise serializers.ValidationError('Stock cannot be negative')
         return value
-    
-    
-    
-    
-    
-        
-        
-        
-        
-        
+
+
+# ------------------------- product serilizer ends --------------------------------------

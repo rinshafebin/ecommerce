@@ -1,4 +1,3 @@
-from django.contrib.auth import get_user_model
 from rest_framework.views import APIView
 from Authentication.serializers import UserRegistrationSerializer,LoginSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -7,7 +6,6 @@ from rest_framework.response import Response
 from rest_framework import status
 
 # Create your views here.
-Custom_user = get_user_model()
 
 class UserRegistration(APIView):
     def post(self,request):

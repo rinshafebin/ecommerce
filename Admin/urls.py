@@ -1,11 +1,15 @@
 from django.urls import path
-from Admin.views import ProductlistApi,ProductCreateApi,ProductUpdateApi,ViewProductsByCategory,ProductDeleteApi
+from Admin.views import ViewAllUsers,ViewSpecificUser,Productlist,ProductCreate,ProductUpdate,ViewProductsByCategory,ProductDelete,ViewProduct
 
 urlpatterns = [
-    path('allproducts/',ProductlistApi.as_view(),name='allproducts'),
-    path('createproduct/',ProductCreateApi.as_view(),name='createproduct'),
-    path('updateproduct/',ProductUpdateApi.as_view(),name='updateproduct'),
-    path('productsbycategory/',ViewProductsByCategory.as_view(),name='categoryview'),
-    path('productdelete/',ProductDeleteApi.as_view(),name='deleteproduct'),
+    path('allusers/',ViewAllUsers.as_view(),name='allusers'),
+    path('viewuser/<int:pk>/',ViewSpecificUser.as_view(),name='userdetail'),
+
+    path('allproducts/',Productlist.as_view(),name='allproducts'),
+    path('createproduct/',ProductCreate.as_view(),name='createproduct'),
+    path('viewproduct/<int:pk>/',ViewProduct.as_view(),name='allusers'),
+    path('updateproduct/<int:pk>/',ProductUpdate.as_view(),name='updateproduct'),
+    path('productsbycategory/<str:category>/',ViewProductsByCategory.as_view(),name='categoryview'),
+    path('productdelete/<int:pk>/',ProductDelete.as_view(),name='deleteproduct'),
     
 ]
