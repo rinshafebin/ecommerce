@@ -15,6 +15,6 @@ class CartView(APIView):
         return Response(serializer.data)
 
 class AddProductsToCart(APIView):
-        permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def post(self,request,user_id):
