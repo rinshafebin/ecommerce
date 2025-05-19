@@ -1,20 +1,29 @@
 from rest_framework.views import APIView
-from cart.models import Cart,CartItem
-from cart.serializers import CartItemSerializer,CartSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
+from cart.models import Cart, CartItem
+from cart.serializers import AddToCartSerializer
 
-# Create your views here.
-class CartView(APIView):
-    permission_classes = [IsAuthenticated]
-    
-    def get(self,request,user_id):
-        cart = Cart.objects.filter(user__id = user_id)
-        serializer = CartSerializer(cart,many=True)
-        return Response(serializer.data)
-
-class AddProductsToCart(APIView):
+class AddToCartView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(self,request,user_id):
+    def post(self, request):
+        serializer = AddToCartSerializer(data=request.data)
+        
+        if serializer.is_valid():  
+            product = serializer.validated_data['product_id']
+            quantity = serializer.validated_data['quantity']
+
+            cart, created = Cart.objects.get_or_create(user=request.user)
+            cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
+
+            if not created:
+                cart_item.quantity += quantity
+            else:
+                cart_item.quantity = quantity
+            cart_item.save()
+
+            return Response({'message': 'Product added to cart', 'quantity': cart_item.quantity}, status=status.HTTP_201_CREATED)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -1,14 +1,11 @@
 from django.urls import path
-from AdminUser.views import ViewAllUsers,ViewSpecificUser,Productlist,ProductCreate,ProductUpdate,ViewProductsByCategory,ProductDelete,ViewProduct
-
+from AdminUser.views import ViewAllUsers,Products
 urlpatterns = [
     path('allusers/',ViewAllUsers.as_view(),name='allusers'),
-    path('viewuser/<int:pk>/',ViewSpecificUser.as_view(),name='userdetail'),
-    path('allproducts/',Productlist.as_view(),name='allproducts'),
-    path('createproduct/',ProductCreate.as_view(),name='createproduct'),
-    path('viewproduct/<int:pk>/',ViewProduct.as_view(),name='allusers'),
-    path('updateproduct/<int:pk>/',ProductUpdate.as_view(),name='updateproduct'),
-    path('productsbycategory/<str:category>/',ViewProductsByCategory.as_view(),name='categoryview'),
-    path('productdelete/<int:pk>/',ProductDelete.as_view(),name='deleteproduct'),
+    path('userdetail/<int:pk>/',ViewAllUsers.as_view(),name='userdetail'),
+    path('products/',Products.as_view(),name='products'),
+    path('createproduct/',Products.as_view(),name='products'),
+
+
     
 ]

@@ -14,12 +14,4 @@ class CartItem(models.Model):
     
 
 
-class WishList(models.Model):
-    user = models.OneToOneField(CustomUser,on_delete=models.CASCADE)
-
-
-class WishListitem(models.Model):
-    wish_list = models.ForeignKey(WishList,on_delete=models.CASCADE)
-    products = models.ForeignKey(Product,on_delete=models.CASCADE)
-        
         
