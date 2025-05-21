@@ -74,6 +74,8 @@ class ProductDetails(APIView):
         
         except:    
             return Response({'detail': 'error deleting the product'},status=status.HTTP_404_NOT_FOUND)
+        
+        
 
 
 class ViewProductsByCategory(APIView):
