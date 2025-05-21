@@ -38,8 +38,19 @@ class Products(APIView):
     def post(self, request):
         serializer = ProductSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            validated_data = serializer.validated_data
+            
+            product = Product.objects.create(
+                name = validated_data['name'],
+                description = validated_data['description'],
+                price = validated_data['price'],
+                category = validated_data['category'],
+                stock = validated_data.get['stock',0],
+                image = validated_data.get['image',None],
+                
+            )
+            response_serializer = ProductSerializer(product)
+            return Response(response_serializer, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
  
         
