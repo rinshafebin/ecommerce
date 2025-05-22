@@ -1,5 +1,5 @@
 from rest_framework.views import APIView
-from Auth.serializers import UserRegistrationSerializer,LoginSerializer
+from Auth.serializers import UserRegistrationSerializer,LoginSerializer,ChangePasswordSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
 from Auth.models import CustomUser
@@ -9,6 +9,7 @@ from django.contrib.auth.hashers import make_password
 
 
 # Create your views here.
+# --------------------------  registration  -------------------------------------------
 
 class UserRegistration(APIView):
     def post(self,request):
@@ -22,8 +23,10 @@ class UserRegistration(APIView):
             
             return Response({'message':'user created succesfully'},status=status.HTTP_201_CREATED)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
     
-    
+# -------------------------- Login  -------------------------------------------
+   
 class Login(APIView):
     def post(self,request):
         serilaizer = LoginSerializer(data=request.data)
@@ -42,17 +45,33 @@ class Login(APIView):
         return Response(serilaizer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 
+# -------------------------- Change password -------------------------------------------
 
 
 class ChangePassword(APIView):
-    def 
+    permission_classes = [IsAuthenticated]
+    
+    def post(self,request):
+        user = request.user
+        serializer = ChangePasswordSerializer()
+        
+        if serializer.is_valid():
+            old_password = serializer.validated_data['old_password']
+            new_password = serializer.validated_data['new_password']
+            
+            if not user.check_password(old_password):
+                return Response({'error':'old password is correct'},status=status.HTTP_200_OK)
+            
+            user.set_password(new_password)
+            user.save()
+            
+            return Response({'message':'Password Changed succesfully '},status=status.HTTP_200_OK)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+            
 
 
-
-
-
-
-
+# -------------------------- Logout -------------------------------------------
+   
 class Logout(APIView):
     permission_classes=[IsAuthenticated]
     

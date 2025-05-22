@@ -2,8 +2,8 @@ from rest_framework import serializers
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate
 from Auth.models import CustomUser
-from Auth.views import ChangePassword
 
+# ------------------------user registration serializer ---------------------------
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(write_only=True)  
@@ -21,6 +21,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         return CustomUser.objects.create_user(**validated_data)
 
 
+# ---------------------------- login serializer ---------------------------
 
 class LoginSerializer(serializers.ModelSerializer):
     email = serializers.EmailField() 
@@ -43,6 +44,10 @@ class LoginSerializer(serializers.ModelSerializer):
         data['user'] = user
         return data
         
-    
-class ChangePassword(serializers.ModelSerializer)
+ 
+# ------------------------change password serializer ---------------------------
+   
+class ChangePasswordSerializer(serializers.ModelSerializer):
+    old_password = serializers.CharField(required = True)
+    new_password = serializers.CharField(required = True)
    
