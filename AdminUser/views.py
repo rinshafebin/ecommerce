@@ -13,10 +13,15 @@ from rest_framework import status
 
 class ViewAllUsers(APIView):
     permission_classes = [IsAdminUser]
+    
+    # ------------- get all users----------------
+    
     def get(self,request):
         users = CustomUser.objects.filter(is_superuser=False)
         serializer = ViewAllUsersSerializer(users,many=True)
         return Response(serializer.data,status=status.HTTP_200_OK)
+    
+    # ------------  get one user ---------------
     
     def get(self,request,pk):
         user = CustomUser.objects.get(pk=pk)
@@ -28,6 +33,9 @@ class ViewAllUsers(APIView):
 
 class Products(APIView):
     permission_classes = [IsAuthenticated]
+
+    # -------------  get all products -----------------
+    
     def get(self, request):
         products = Product.objects.all()
         if products.exists():
@@ -35,6 +43,9 @@ class Products(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response({'detail': 'No products found'}, status=status.HTTP_204_NO_CONTENT)
     
+    
+    # ---------------------- create product --------------
+
     def post(self, request):
         serializer = ProductSerializer(data=request.data)
         if serializer.is_valid():
@@ -59,12 +70,15 @@ class ProductDetails(APIView):
     permission_classes = [IsAdminUser]
     parser_classes = [MultiPartParser, FormParser]
     
+    # ---------------------- get a single product --------------
+
     def get(self,request,pk):
         product = Product.objects.get(pk=pk)
         serializer = ProductSerializer(product)
         return Response(serializer.data,status=status.HTTP_200_OK)
 
-  
+    # ---------------------- update a single product --------------
+
     def put(self, request, pk):
         try:
             product = Product.objects.get(pk=pk)
@@ -90,7 +104,9 @@ class ProductDetails(APIView):
 
 
 class ViewProductsByCategory(APIView):
-           
+    
+    # ---------------------- products viewing by category  --------------
+     
     def get(self, request, category):
         try:
             products = Product.objects.filter(category=category)

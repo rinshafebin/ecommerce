@@ -42,6 +42,17 @@ class Login(APIView):
         return Response(serilaizer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 
+
+
+class ChangePassword(APIView):
+    def 
+
+
+
+
+
+
+
 class Logout(APIView):
     permission_classes=[IsAuthenticated]
     

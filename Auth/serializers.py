@@ -2,6 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate
 from Auth.models import CustomUser
+from Auth.views import ChangePassword
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -43,5 +44,5 @@ class LoginSerializer(serializers.ModelSerializer):
         return data
         
     
-    
+class ChangePassword(serializers.ModelSerializer)
    
