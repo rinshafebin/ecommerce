@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from AdminUser.models import Product
+from products.models import Product
 
 class AddToCartSerializer(serializers.Serializer):
     product_id = serializers.PrimaryKeyRelatedField(queryset=Product.objects.all())

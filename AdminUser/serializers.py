@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from AdminUser.models import Product
+from products.models import Product
 from Auth.models import CustomUser
 
 

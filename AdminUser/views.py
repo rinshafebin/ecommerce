@@ -3,7 +3,7 @@ from rest_framework.permissions import IsAdminUser,IsAuthenticated
 from rest_framework.parsers import MultiPartParser, FormParser
 from AdminUser.serializers import ProductSerializer,ViewAllUsersSerializer
 from rest_framework.response import Response 
-from AdminUser.models import Product
+from products.models import Product
 from Auth.models import CustomUser
 from rest_framework import status
 # Create your views here.
