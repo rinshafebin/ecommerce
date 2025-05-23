@@ -150,7 +150,6 @@ class ResetPassword(APIView):
 # --------------------------------- setting a new password ----------------------------------
 
 class ResetPasswordview(APIView):
-    permission_classes = [IsAuthenticated]
     
     def post(self,request,uidb64,token):
         try :
