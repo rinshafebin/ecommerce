@@ -30,11 +30,10 @@ class LoginSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ['email','password']
-    
+        
     def validate(self,data):
         email = data.get('email')
         password=data.get('password')       
-        
         if email and password:
             user =authenticate(username=email,password=password)
             if not user :
@@ -47,7 +46,18 @@ class LoginSerializer(serializers.ModelSerializer):
  
 # ------------------------change password serializer ---------------------------
    
-class ChangePasswordSerializer(serializers.ModelSerializer):
+class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(required = True)
     new_password = serializers.CharField(required = True)
+    
+
+# ---------------------- Reset password serializer ---------------------------
+   
+class ResetPasswordSerializer(serializers.Serializer):
+    email = serializers.EmailField(required = True)
+    
+    def validate_email(self,value):
+        if not CustomUser.objects.filter(email=value).exists():
+            raise serializers.ValidationError('email not found')
+        return value
    

@@ -144,3 +144,5 @@ SIMPLE_JWT = {
 }
 
 AUTH_USER_MODEL = 'Auth.CustomUser'
+
+DEFAULT_FROM_EMAIL = 'admin@myshop.com'
