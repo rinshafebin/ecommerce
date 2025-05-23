@@ -112,8 +112,60 @@ class ChangePassword(APIView):
             
 
 
+
+# --------------------------------- reset password -------------------------------------
+
+class ResetPassword(APIView):
+    def post(self,request):
+        email = request.data.get('email')
+        if not email:
+            return Response({'error':'email is required'},status=status.HTTP_400_BAD_REQUEST)
+        
+        try :
+            user =CustomUser.objects.get(email=email)
+        except CustomUser.DoesNotExist :
+            return Response({'error':'user not found'},status=status.HTTP_400_BAD_REQUEST)
+        
+        
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+        token = default_token_generator.make_token(user)
+        
+        current_site = get_current_site(request)
+        reset_link = f"http://{current_site.domain}/resetpassword/{uid}/{token}/"
+        
+        send_mail(
+            subject='Reset Your Password',
+            message=f"Click the link below to reset your password:\n{reset_link}",
+            from_email='admin@myshop.com',
+            recipient_list=[user.email],
+        )
+        return Response({'message': 'Password reset link sent to your email'}, status=status.HTTP_200_OK)
+
+
+
+class ResetPasswordview(APIView):
+    def post(self,request,uidb64,token):
+        try :
+            uid = force_str(urlsafe_base64_decode(uidb64))
+            user = CustomUser.objects.get(pk=uid)
+        except CustomUser.DoesNotExist:
+            return Response({'error':'user not found '},status=status.HTTP_400_BAD_REQUEST)
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
 # -------------------------- Logout -------------------------------------------
    
+
 class Logout(APIView):
     permission_classes=[IsAuthenticated]
     

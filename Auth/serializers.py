@@ -87,3 +87,12 @@ class ResetPasswordSerializer(serializers.Serializer):
             raise serializers.ValidationError('email not found')
         return value
    
+
+class SetNewPassword(serializers.Serializer):
+    password = serializers.CharField()
+    
+    
+
+
+
+# -----------------------------------------------    -------------------------------   
