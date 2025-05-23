@@ -87,8 +87,9 @@ class Login(APIView):
         return Response(serilaizer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 
-# -------------------------- Change password -------------------------------------------
 
+
+# -------------------------- Change password -------------------------------------------
 
 class ChangePassword(APIView):
     permission_classes = [IsAuthenticated]
@@ -116,6 +117,8 @@ class ChangePassword(APIView):
 # --------------------------------- reset password -------------------------------------
 
 class ResetPassword(APIView):
+    permission_classes = [IsAuthenticated]
+    
     def post(self,request):
         email = request.data.get('email')
         if not email:
@@ -131,7 +134,7 @@ class ResetPassword(APIView):
         token = default_token_generator.make_token(user)
         
         current_site = get_current_site(request)
-        reset_link = f"http://{current_site.domain}/resetpassword/{uid}/{token}/"
+        reset_link = f"http://{current_site.domain}/auth/resetpassword/{uid}/{token}/"
         
         send_mail(
             subject='Reset Your Password',
@@ -143,7 +146,12 @@ class ResetPassword(APIView):
 
 
 
+
+# --------------------------------- setting a new password ----------------------------------
+
 class ResetPasswordview(APIView):
+    permission_classes = [IsAuthenticated]
+    
     def post(self,request,uidb64,token):
         try :
             uid = force_str(urlsafe_base64_decode(uidb64))
@@ -151,21 +159,23 @@ class ResetPasswordview(APIView):
         except CustomUser.DoesNotExist:
             return Response({'error':'user not found '},status=status.HTTP_400_BAD_REQUEST)
         
+        if not default_token_generator.check_token(user,token):
+            return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
         
         
-
-
-
-
-
-
+        new_password = request.data.get('new_password')
+        if not new_password:
+            return Response({'error':'password is required '},status=status.HTTP_400_BAD_REQUEST)
+        
+        user.set_password(new_password)
+        user.save()
+        return Response({'message': 'Password has been reset successfully'}, status=status.HTTP_200_OK)
 
 
 
 
 # -------------------------- Logout -------------------------------------------
    
-
 class Logout(APIView):
     permission_classes=[IsAuthenticated]
     
@@ -180,3 +190,4 @@ class Logout(APIView):
 
 
 
+# -----------------------------------------  ------------------------------------------------

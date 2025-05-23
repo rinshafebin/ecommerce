@@ -89,10 +89,8 @@ class ResetPasswordSerializer(serializers.Serializer):
    
 
 class SetNewPassword(serializers.Serializer):
-    password = serializers.CharField()
+    new_password = serializers.CharField()
     
     
-
-
 
 # -----------------------------------------------    -------------------------------   
