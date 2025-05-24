@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAdminUser,IsAuthenticated
 from rest_framework.parsers import MultiPartParser, FormParser
-from AdminUser.serializers import ProductSerializer,ViewAllUsersSerializer
+from Adminside.serializers import ProductSerializer,ViewAllUsersSerializer
 from rest_framework.response import Response 
 from products.models import Product
 from Auth.models import CustomUser
@@ -14,19 +14,20 @@ from rest_framework import status
 class ViewAllUsers(APIView):
     permission_classes = [IsAdminUser]
     
-    # ------------- get all users----------------
-    
     def get(self,request):
         users = CustomUser.objects.filter(is_superuser=False)
         serializer = ViewAllUsersSerializer(users,many=True)
         return Response(serializer.data,status=status.HTTP_200_OK)
     
-    # ------------  get one user ---------------
-    
+class UseDetail(APIView):
+    permission_classes = [IsAdminUser]
+
     def get(self,request,pk):
         user = CustomUser.objects.get(pk=pk)
         serializer = ViewAllUsersSerializer(user)
         return Response(serializer.data,status=status.HTTP_200_OK)
+      
+    
 
 # ---------------------------------- product apis for CRUD ----------------------------------------------#
 
@@ -56,12 +57,12 @@ class Products(APIView):
                 description = validated_data['description'],
                 price = validated_data['price'],
                 category = validated_data['category'],
-                stock = validated_data.get['stock',0],
-                image = validated_data.get['image',None],
+                stock = validated_data.get('stock',0),
+                image = validated_data.get('image',None),
                 
             )
             response_serializer = ProductSerializer(product)
-            return Response(response_serializer, status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
  
         

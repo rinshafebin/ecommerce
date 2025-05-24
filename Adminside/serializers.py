@@ -9,7 +9,7 @@ class ViewAllUsersSerializer(serializers.ModelSerializer):
         fields = ['id','username','email','is_active','date_joined']
 
 
-# -----------------------product serializer ----------------------------------------
+# ----------------------- product serializer ----------------------------------------
 
 class ProductSerializer(serializers.ModelSerializer):
     category = serializers.ChoiceField(choices=Product.CATEGORY_CHOICES)
