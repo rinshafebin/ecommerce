@@ -1,7 +1,8 @@
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAdminUser,IsAuthenticated
 from rest_framework.parsers import MultiPartParser, FormParser
-from Adminside.serializers import ProductSerializer,ViewAllUsersSerializer
+from products.serializers import ProductSerializer
+from products.serializers import ViewAllUsersSerializer
 from rest_framework.response import Response 
 from products.models import Product
 from Auth.models import CustomUser
@@ -19,7 +20,7 @@ class ViewAllUsers(APIView):
         serializer = ViewAllUsersSerializer(users,many=True)
         return Response(serializer.data,status=status.HTTP_200_OK)
     
-class UseDetail(APIView):
+class UserDetail(APIView):
     permission_classes = [IsAdminUser]
 
     def get(self,request,pk):
@@ -33,9 +34,7 @@ class UseDetail(APIView):
 
 
 class Products(APIView):
-    permission_classes = [IsAuthenticated]
-
-    # -------------  get all products -----------------
+    permission_classes = [IsAdminUser]
     
     def get(self, request):
         products = Product.objects.all()
@@ -44,8 +43,6 @@ class Products(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response({'detail': 'No products found'}, status=status.HTTP_204_NO_CONTENT)
     
-    
-    # ---------------------- create product --------------
 
     def post(self, request):
         serializer = ProductSerializer(data=request.data)
@@ -66,20 +63,18 @@ class Products(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
  
         
+# ----------------------------- crud product --------------------------------
 
 class ProductDetails(APIView):
     permission_classes = [IsAdminUser]
     parser_classes = [MultiPartParser, FormParser]
-    
-    # ---------------------- get a single product --------------
 
     def get(self,request,pk):
         product = Product.objects.get(pk=pk)
         serializer = ProductSerializer(product)
         return Response(serializer.data,status=status.HTTP_200_OK)
 
-    # ---------------------- update a single product --------------
-
+   
     def put(self, request, pk):
         try:
             product = Product.objects.get(pk=pk)
@@ -92,6 +87,7 @@ class ProductDetails(APIView):
         except Product.DoesNotExist:
             return Response({'detail': 'Eror updating product'}, status=status.HTTP_404_NOT_FOUND)
 
+    
     def delete(self, request, pk):
         try:
             product = Product.objects.get(pk=pk)
@@ -102,12 +98,13 @@ class ProductDetails(APIView):
             return Response({'detail': 'error deleting the product'},status=status.HTTP_404_NOT_FOUND)
         
         
+    
+# ---------------------------- products viewing by category  --------------------------
 
 
 class ViewProductsByCategory(APIView):
+    permission_classes = [IsAdminUser]     
     
-    # ---------------------- products viewing by category  --------------
-     
     def get(self, request, category):
         try:
             products = Product.objects.filter(category=category)
@@ -122,4 +119,3 @@ class ViewProductsByCategory(APIView):
 
 
 
-# ----------------------------------------------- product apis end ------------------------------------------

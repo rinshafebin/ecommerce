@@ -1,8 +1,8 @@
 from django.urls import path
-from Adminside.views import ViewAllUsers,Products,ProductDetails,ViewProductsByCategory,UseDetail
+from Adminside.views import ViewAllUsers,Products,ProductDetails,ViewProductsByCategory,UserDetail
 urlpatterns = [
     path('allusers/',ViewAllUsers.as_view(),name='allusers'),
-    path('userdetail/<int:pk>/',UseDetail.as_view(),name='userdetail'),
+    path('userdetail/<int:pk>/',UserDetail.as_view(),name='userdetail'),
     
     path('products/',Products.as_view(),name='products'),
     path('createproduct/',Products.as_view(),name='createproducts'),
@@ -12,9 +12,5 @@ urlpatterns = [
     path('deleteproduct/<int:pk>/',Products.as_view(),name='deleteproduct'),
     path('productbycategory/<str:category>/',ViewProductsByCategory.as_view(),name='productdetailbycategory'),
 
-
-
-
-
-    
+  
 ]
