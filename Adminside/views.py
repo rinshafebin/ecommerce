@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAdminUser,IsAuthenticated
 from rest_framework.parsers import MultiPartParser, FormParser
 from products.serializers import ProductSerializer
-from products.serializers import ViewAllUsersSerializer
+from Adminside.serializers import ViewAllUsersSerializer
 from rest_framework.response import Response 
 from products.models import Product
 from Auth.models import CustomUser

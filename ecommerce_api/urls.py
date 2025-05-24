@@ -19,8 +19,9 @@ from django.urls import path,include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('adminuser/',include('AdminUser.urls')),
     path('auth/',include('Auth.urls')),
+    path('adminside/',include('Adminside.urls')),
+    path('user/',include('user.urls')),
     # path('cart/',include('cart.urls')),
 
 

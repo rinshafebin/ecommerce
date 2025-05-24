@@ -117,7 +117,6 @@ class ChangePassword(APIView):
 # --------------------------------- reset password -------------------------------------
 
 class ResetPassword(APIView):
-    permission_classes = [IsAuthenticated]
     
     def post(self,request):
         email = request.data.get('email')

@@ -1,5 +1,5 @@
 from django.urls import path
-from Adminside.views import Products,ProductDetails,ViewProductsByCategory
+from user.views import Products,ProductDetails,ViewProductsByCategory
 urlpatterns = [
 
     path('products/',Products.as_view(),name='products'),
