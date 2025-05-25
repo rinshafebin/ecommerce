@@ -25,5 +25,4 @@ urlpatterns = [
     path('cart/',include('cart.urls')),
 
 
-
 ]
