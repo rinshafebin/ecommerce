@@ -20,7 +20,3 @@ class WishList(models.Model):
 class WishListItem(models.Model):
     wishlist = models.ForeignKey(WishList,on_delete=models.CASCADE)
     product = models.ForeignKey(Product,on_delete=models.CASCADE)
-
-
-class order
-        

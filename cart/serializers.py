@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from cart.models import Cart,CartItem
 from products.models import Product 
+from cart.models import OrderItem
 
 class AddToCartItemSerializer(serializers.Serializer):
     product_id = serializers.CharField()
@@ -20,3 +20,11 @@ class AddToWishlistSerializer(serializers.Serializer):
         if not Product.objects.filter(id=value).exists():
             raise serializers.ValidationError("product not found")
         return value
+    
+    
+    
+
+class OrderItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrderItem
+        fields = ['product', 'quantity']
