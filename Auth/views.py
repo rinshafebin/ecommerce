@@ -14,6 +14,7 @@ from django.urls import reverse
 from django.conf import settings
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404 
+from django.contrib.auth.hashers import make_password
 
 
 
@@ -24,9 +25,19 @@ class UserRegistration(APIView):
     def post(self,request):
         serializer = UserRegistrationSerializer(data=request.data)
         if serializer.is_valid():
-            user = serializer.save()
-            user.is_active = False
-            user.save()
+            validated_data =serializer.validated_data
+            validated_data.pop('password2')
+            
+            user = CustomUser.objects.create(
+                username =validated_data['username'],
+                email = validated_data['email'],
+                password = make_password(validated_data['password']),
+                is_active = False
+            )
+            
+            # user = serializer.save()
+            # user.is_active = False
+            # user.save()
                       
             current_site = get_current_site(request)
             uid = urlsafe_base64_encode(force_bytes(user.pk)) 
@@ -105,8 +116,12 @@ class ChangePassword(APIView):
             if not user.check_password(old_password):
                 return Response({'error':'old password is correct'},status=status.HTTP_200_OK)
             
-            user.set_password(new_password)
-            user.save()
+            hashed_password = make_password(new_password)
+            CustomUser.objects.filter(pk=user.pk).update(password = hashed_password)
+            
+            
+            # user.set_password(new_password)
+            # user.save()
             
             return Response({'message':'Password Changed succesfully '},status=status.HTTP_200_OK)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
@@ -165,8 +180,13 @@ class ResetPasswordview(APIView):
         if not new_password:
             return Response({'error':'password is required '},status=status.HTTP_400_BAD_REQUEST)
         
-        user.set_password(new_password)
-        user.save()
+        hashed_password = make_password(new_password)
+        CustomUser.objects.filter(pk=user.pk).update(password=hashed_password)
+        
+        
+        
+        # user.set_password(new_password)
+        # user.save()
         return Response({'message': 'Password has been reset successfully'}, status=status.HTTP_200_OK)
 
 

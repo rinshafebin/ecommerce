@@ -24,8 +24,10 @@ class AddToCartView(APIView):
                 cart_item.quantity += quantity
             else :
                 cart_item.quantity = quantity    
+            
             cart_item.save()
             
+
             return Response({
                 'message': 'Product added to cart',
                 "product_id": product.id,

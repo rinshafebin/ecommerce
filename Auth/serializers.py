@@ -19,14 +19,6 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('passwords do not match...')
         return data  
          
-    def create(self, validated_data):
-        validated_data.pop('password2')  
-        validated_data['password'] = make_password(validated_data['password']) 
-        return CustomUser.objects.create(**validated_data)
-
-
-
-
 
 # ---------------------------- login serializer ---------------------------
 

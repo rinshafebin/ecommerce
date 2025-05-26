@@ -23,6 +23,7 @@ class CreateOrderView(APIView):
             return Response({"detail": "Cart not found."}, status=status.HTTP_404_NOT_FOUND)
 
         cart_items = CartItem.objects.filter(cart=cart)
+        
         if not cart_items.exists():
             return Response({"detail": "Cart is empty."}, status=status.HTTP_400_BAD_REQUEST)
 

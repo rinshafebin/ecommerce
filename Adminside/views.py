@@ -7,8 +7,8 @@ from rest_framework.response import Response
 from products.models import Product
 from Auth.models import CustomUser
 from rest_framework import status
-from orders.models import Order
-from orders.serializers import OrderItemSerializer
+from rest_framework.pagination import LimitOffsetPagination
+
 
 # Create your views here.
 
@@ -41,12 +41,14 @@ class Products(APIView):
     
     def get(self, request):
         products = Product.objects.all()
-        if products.exists():
-            serializer = ProductSerializer(products, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response({'detail': 'No products found'}, status=status.HTTP_204_NO_CONTENT)
     
+        paginator = LimitOffsetPagination()
+        result_page = paginator.paginate_queryset(products, request)
+    
+        serializer = ProductSerializer(result_page, many=True)
+        return paginator.get_paginated_response(serializer.data)
 
+    
     def post(self, request):
         serializer = ProductSerializer(data=request.data)
         if serializer.is_valid():
@@ -62,7 +64,7 @@ class Products(APIView):
                 
             )
             response_serializer = ProductSerializer(product)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(response_serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
  
         
@@ -83,7 +85,13 @@ class ProductDetails(APIView):
             product = Product.objects.get(pk=pk)
             serializer = ProductSerializer(product, data=request.data, partial=True)
             if serializer.is_valid():
-                serializer.save()
+                # serializer.save()
+                validated_data = serializer.validated_data
+                Product.objects.filter(pk=pk).update(**validated_data)
+                
+                updated_product = Product.objects.get(pk=pk)
+                serializer = ProductSerializer(updated_product)
+                
                 return Response(serializer.data, status=status.HTTP_200_OK)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
