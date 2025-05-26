@@ -7,6 +7,9 @@ from rest_framework.response import Response
 from products.models import Product
 from Auth.models import CustomUser
 from rest_framework import status
+from orders.models import Order
+from orders.serializers import OrderItemSerializer
+
 # Create your views here.
 
 
@@ -116,6 +119,7 @@ class ViewProductsByCategory(APIView):
         except:
             return Response({'detail': 'error fetching products by category'}, status=status.HTTP_400_BAD_REQUEST)
                
+
 
 
 

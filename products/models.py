@@ -3,10 +3,8 @@ from django.db import models
 # Create your models here.
 class Product(models.Model):
     CATEGORY_CHOICES = [
-        ('electronics', 'Electronics'),
         ('clothing', 'Clothing'),
-        ('books', 'Books'),
-        ('furniture', 'Furniture'),
+        ('books', 'Books'),   
     ]
 
     name = models.CharField(max_length=200)

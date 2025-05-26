@@ -2,8 +2,9 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Cart, CartItem, Order, OrderItem
-from .serializers import OrderSerializer
+from cart.models import Cart, CartItem 
+from orders.models import Order, OrderItem
+from orders.serializers import OrderSerializer
 
 class CreateOrderView(APIView):
     permission_classes = [IsAuthenticated]
@@ -12,7 +13,6 @@ class CreateOrderView(APIView):
         orders = Order.objects.filter(user=request.user).order_by('-created_at')
         serializer = OrderSerializer(orders, many=True)
         return Response(serializer.data)
-
 
     def post(self, request):
         user = request.user

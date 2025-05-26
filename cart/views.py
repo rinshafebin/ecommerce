@@ -29,7 +29,9 @@ class AddToCartView(APIView):
             return Response({
                 'message': 'Product added to cart',
                 "product_id": product.id,
+                "name" :product.name,
                 "quantity": cart_item.quantity
+                
             }, status=status.HTTP_201_CREATED)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
