@@ -9,11 +9,6 @@ from orders.serializers import OrderSerializer
 class CreateOrderView(APIView):
     permission_classes = [IsAuthenticated]
     
-    def get(self, request):
-        orders = Order.objects.filter(user=request.user).order_by('-created_at')
-        serializer = OrderSerializer(orders, many=True)
-        return Response(serializer.data)
-
     def post(self, request):
         user = request.user
         

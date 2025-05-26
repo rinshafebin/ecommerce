@@ -8,6 +8,8 @@ from products.models import Product
 from Auth.models import CustomUser
 from rest_framework import status
 from rest_framework.pagination import LimitOffsetPagination
+from orders.models import Order
+from orders.serializers import OrderSerializer
 
 
 # Create your views here.
@@ -128,6 +130,12 @@ class ViewProductsByCategory(APIView):
             return Response({'detail': 'error fetching products by category'}, status=status.HTTP_400_BAD_REQUEST)
                
 
+# ----------------------------    all orders  --------------------------
 
+class AllOrders(APIView):
+    permission_classes = [IsAdminUser]
 
-
+    def get(self, request):
+        orders = Order.objects.all().order_by('-created_at')
+        serializer = OrderSerializer(orders, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
